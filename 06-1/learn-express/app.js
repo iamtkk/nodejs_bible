@@ -13,8 +13,8 @@ app.use(morgan("dev"));
 app.use("/", express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.text());
-app.use(express.urlencoded({ extended: false }));
-// app.use(express.urlencoded());
+// app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
@@ -30,7 +30,15 @@ app.use(
 );
 app.use((req, res, next) => {
   console.log("req.body : ", req.body);
+  console.log("req.cookies : ", req.cookies);
+  console.log("req.signedCookies : ", req.signedCookies);
   console.log("모든 요청에 다 실행됩니다.");
+  res.cookie("test", "test121", { signed: true });
+  res.cookie("name", "iamtk", {
+    expires: new Date(Date.now() + 900000),
+    httpOnly: true,
+    secure: true,
+  });
   next();
 });
 app.get(
